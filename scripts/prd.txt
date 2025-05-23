@@ -1,0 +1,98 @@
+1. Resumen del Servicio
+
+Microservicio encargado de almacenar archivos (fotos, PDF, etc.), exponer una API REST para subir, listar, descargar y eliminar archivos, y guardar metadatos en PostgreSQL.
+No se implementa control de versiones: si un archivo ya existe, la subida será rechazada.
+
+2. Stack Tecnológico
+
+- Node.js + Express: API REST
+- Multer: Manejo de archivos
+- Prisma: ORM para PostgreSQL
+- PostgreSQL: Base de datos (ya instalada)
+- Docker: Contenerización
+- Swagger/OpenAPI: Documentación de la API
+- Github
+
+3. Modelo de Datos (Prisma)
+
+model File {
+  id         Int      @id @default(autoincrement())
+  filename   String   @unique
+  path       String
+  uploadedAt DateTime @default(now())
+  user       String
+  location   String?
+  filetype   String
+  // Otros campos según necesidad
+}
+
+4. Endpoints de la API
+
+- POST /upload
+  - Sube un archivo y sus metadatos.
+  - Request: multipart/form-data (archivo + campos de metadatos)
+  - Validaciones: Rechazar si el archivo ya existe (filename único). Validar tipo y tamaño de archivo.
+  - Response: 201 Created con metadatos del archivo. 409 Conflict si el archivo ya existe.
+
+- GET /files
+  - Lista todos los archivos y sus metadatos.
+  - Query params: paginación (page, limit), filtros (user, fecha, etc.)
+  - Response: Array de archivos con metadatos.
+
+- GET /files/:id
+  - Descarga un archivo por su id.
+  - Response: Archivo binario.
+
+- DELETE /files/:id
+  - Elimina un archivo y su registro de metadatos.
+  - Response: 200 OK o 404 si no existe.
+
+5. Reglas de Negocio
+
+- No permitir archivos duplicados (por nombre).
+- Validar tipo y tamaño de archivo.
+- Guardar todos los metadatos relevantes.
+- Manejar errores y devolver mensajes claros.
+- Documentar la API con Swagger/OpenAPI.
+
+6. Estructura de Carpetas Sugerida
+
+/src
+  /controllers
+  /routes
+  /middlewares
+  /services
+  /utils
+  /uploads
+/prisma
+  schema.prisma
+Dockerfile
+.env
+README.md
+
+7. Variables de Entorno
+
+- DATABASE_URL: conexión a PostgreSQL
+- UPLOADS_PATH: ruta para guardar archivos subidos
+- Otros según necesidad
+
+8. Tareas Iniciales a Asignar
+
+- Configurar proyecto base Node.js + Express
+- Configurar Prisma y conexión a PostgreSQL
+- Definir y migrar el modelo File
+- Implementar endpoint POST /upload
+- Implementar endpoint GET /files
+- Implementar endpoint GET /files/:id
+- Implementar endpoint DELETE /files/:id
+- Agregar validaciones y manejo de errores
+- Agregar documentación Swagger/OpenAPI
+- Preparar Dockerfile y pruebas de despliegue
+- Redactar README y manual de uso
+
+9. Notas y Consideraciones
+
+- No implementar control de versiones de archivos.
+- Si en el futuro se requiere, se agregará como nueva funcionalidad.
+- Mantener el código modular y documentado.
+- Usar control de versiones (Git) para el proyecto.

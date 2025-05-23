@@ -1,0 +1,11 @@
+# Task ID: 4
+# Title: Define and Migrate File Model
+# Status: pending
+# Dependencies: 3
+# Priority: high
+# Description: Define the File model in Prisma and migrate it to the database.
+# Details:
+Update the schema.prisma file to include the File model as specified in the PRD. Run 'npx prisma migrate dev --name init' to create the migration and apply it to the database.
+
+# Test Strategy:
+Check the PostgreSQL database to ensure the File table is created with the correct schema.

@@ -1,0 +1,11 @@
+# Task ID: 2
+# Title: Initialize Node.js Project with Express
+# Status: pending
+# Dependencies: 1
+# Priority: high
+# Description: Set up a basic Node.js project using Express framework.
+# Details:
+Run 'npm init' to create a package.json file. Install Express using 'npm install express'. Create an entry point file (e.g., app.js) and set up a basic Express server that listens on a specified port.
+
+# Test Strategy:
+Start the server and access the default route to ensure the server is running.

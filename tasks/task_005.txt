@@ -1,0 +1,11 @@
+# Task ID: 5
+# Title: Implement POST /upload Endpoint
+# Status: pending
+# Dependencies: 4
+# Priority: high
+# Description: Create an endpoint to upload files and their metadata.
+# Details:
+Use Multer middleware to handle file uploads. Implement the POST /upload route to save the file to the specified UPLOADS_PATH and store metadata in the database. Validate file type and size, and ensure filename uniqueness.
+
+# Test Strategy:
+Test file uploads with various file types and sizes. Verify that duplicate filenames are rejected and metadata is correctly stored in the database.
