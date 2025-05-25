@@ -430,27 +430,43 @@ app.get('/api/v1/files',
   try {
     // Los parámetros de consulta ya están validados y potencialmente transformados
     const {
+      cliente_id, // Usar cliente_id numérico
+      lugar_id,   // Usar lugar_id numérico
+      tipo_servicio_id, // Usar tipo_servicio_id numérico
       clienteNombre,
       lugarNombre,
       tipoServicioNombre,
       fechaRealizacionServicio,
-      page = 1, // Valor por defecto si no se provee y pasa la validación opcional
-      limit = 10, // Valor por defecto
+      page = 1,
+      limit = 10,
       sortBy = 'fecha_subida',
       sortOrder = 'desc'
-    } = req.query as any; // Castear a any porque express-validator puede haber transformado los tipos
+    } = req.query as any;
 
-    const skip = (page - 1) * limit;
+    // Asegurar que page y limit sean números para cálculos y respuesta
+    const numericPage = Number(page);
+    const numericLimit = Number(limit);
+
+    const skip = (numericPage - 1) * numericLimit;
     
     const where: Prisma.FileWhereInput = {};
 
-    if (clienteNombre) {
+    // Filtros por ID numérico (prioridad si ambos, ID y nombre, están presentes)
+    if (cliente_id) {
+      where.cliente_id = Number(cliente_id);
+    } else if (clienteNombre) {
       where.cliente = { nombre_cliente: clienteNombre as string };
     }
-    if (lugarNombre) {
+
+    if (lugar_id) {
+      where.lugar_id = Number(lugar_id);
+    } else if (lugarNombre) {
       where.lugar = { nombre_lugar: lugarNombre as string };
     }
-    if (tipoServicioNombre) {
+
+    if (tipo_servicio_id) {
+      where.tipo_servicio_id = Number(tipo_servicio_id);
+    } else if (tipoServicioNombre) {
       where.tipo_servicio = { nombre_tipo_servicio: tipoServicioNombre as string };
     }
     if (fechaRealizacionServicio) {
@@ -486,9 +502,9 @@ app.get('/api/v1/files',
     const files = await prisma.file.findMany({
       where,
       skip,
-      take: limit, // Usar 'limit' directamente de req.query (ya parseado y con default)
+      take: numericLimit, // Usar numericLimit que se definió antes
       orderBy,
-      include: { // Incluir datos relacionados para más contexto si es necesario
+      include: {
         cliente: true,
         lugar: true,
         tipo_servicio: true,
@@ -496,15 +512,16 @@ app.get('/api/v1/files',
     });
 
     const totalFiles = await prisma.file.count({ where });
-    const totalPages = Math.ceil(totalFiles / limit); // Usar 'limit'
+    // Usar numericLimit y numericPage para la respuesta de paginación
+    const totalPages = Math.ceil(totalFiles / numericLimit);
 
     res.status(200).json({
       data: files,
       pagination: {
         totalItems: totalFiles,
         totalPages,
-        currentPage: page, // Usar 'page' directamente
-        pageSize: limit,    // Usar 'limit'
+        currentPage: numericPage,
+        itemsPerPage: numericLimit, // Cambiado de pageSize a itemsPerPage
       },
     });
 

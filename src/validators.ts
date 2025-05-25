@@ -50,6 +50,10 @@ export const fileListQueryValidationRules: ValidationChain[] = [
   query('clienteNombre').optional().isString().trim(),
   query('lugarNombre').optional().isString().trim(),
   query('tipoServicioNombre').optional().isString().trim(),
+  // Validaciones para los IDs numéricos
+  query('cliente_id').optional().isInt({ min: 1 }).withMessage('cliente_id debe ser un entero positivo.').toInt(),
+  query('lugar_id').optional().isInt({ min: 1 }).withMessage('lugar_id debe ser un entero positivo.').toInt(),
+  query('tipo_servicio_id').optional().isInt({ min: 1 }).withMessage('tipo_servicio_id debe ser un entero positivo.').toInt(),
   query('fechaRealizacionServicio').optional().isISO8601().toDate().withMessage('fechaRealizacionServicio debe ser una fecha válida en formato ISO 8601.'),
   query('page').optional().isInt({ min: 1 }).withMessage('El parámetro "page" debe ser un entero positivo.').toInt(),
   query('limit').optional().isInt({ min: 1, max: 100 }).withMessage('El parámetro "limit" debe ser un entero positivo, máximo 100.').toInt(),

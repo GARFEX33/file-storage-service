@@ -118,28 +118,47 @@ describe('File Upload Endpoint (/api/v1/files/upload)', () => {
   // - Manejo de errores del sistema de archivos (al crear directorio)
 
   // Ejemplo de cómo se podría mockear una subida exitosa (requiere 'app' real):
-  /*
   it('should upload a file and create metadata successfully', async () => {
     const mockFile = {
       id: 1,
       nombre_original_archivo: 'test.txt',
-      nombre_archivo_almacenado: 'test_uuid.txt',
+      nombre_archivo_almacenado: 'test_uuid.txt', // Este valor será generado por uuid, así que el mock debe ser flexible o el chequeo también
       mime_type: 'text/plain',
-      tamano_bytes: 100,
-      ruta_almacenamiento_fisico: 'uploads/Test_Client/Test_Location/Mantenimientos/test_uuid.txt',
+      tamano_bytes: 12, // Longitud de "test content"
+      ruta_almacenamiento_fisico: 'uploads/Test_Client/Test_Location/Mantenimientos/test_uuid.txt', // Similar a nombre_archivo_almacenado
       cliente_id: 1,
       lugar_id: 1,
       tipo_servicio_id: 1,
-      fecha_subida: new Date(),
-      updated_at: new Date(),
+      fecha_subida: new Date(), // El chequeo debería ser flexible con las fechas
+      updated_at: new Date(), // El chequeo debería ser flexible con las fechas
     };
 
-    (PrismaClient().client.findUnique as jest.Mock).mockResolvedValueOnce(null); // Cliente no existe
-    (PrismaClient().client.create as jest.Mock).mockResolvedValueOnce({ id: 1, nombre_cliente: 'Test Client' });
-    (PrismaClient().location.findUnique as jest.Mock).mockResolvedValueOnce(null); // Lugar no existe
-    (PrismaClient().location.create as jest.Mock).mockResolvedValueOnce({ id: 1, nombre_lugar: 'Test Location' });
-    (PrismaClient().serviceType.findUnique as jest.Mock).mockResolvedValueOnce({ id: 1, nombre_tipo_servicio: 'Mantenimientos' });
-    (PrismaClient().file.create as jest.Mock).mockResolvedValueOnce(mockFile);
+    // Asegurarse de que prismaInstance se usa en lugar de PrismaClient() directamente en los mocks
+    // para que los mocks se apliquen a la instancia correcta usada en el test.
+    (prismaInstance.client.findUnique as jest.Mock).mockResolvedValueOnce(null); // Cliente no existe
+    (prismaInstance.client.create as jest.Mock).mockResolvedValueOnce({ id: 1, nombre_cliente: 'Test Client', created_at: new Date(), updated_at: new Date() });
+    (prismaInstance.location.findUnique as jest.Mock).mockResolvedValueOnce(null); // Lugar no existe
+    (prismaInstance.location.create as jest.Mock).mockResolvedValueOnce({ id: 1, nombre_lugar: 'Test Location', created_at: new Date(), updated_at: new Date() });
+    (prismaInstance.serviceType.findUnique as jest.Mock).mockResolvedValueOnce({ id: 1, nombre_tipo_servicio: 'Mantenimientos', created_at: new Date(), updated_at: new Date() });
+    
+    // Mock para file.create, ajustando para que el resultado coincida con lo que se espera
+    (prismaInstance.file.create as jest.Mock).mockImplementation(async (data: any) => {
+      // Simular la estructura del archivo devuelto, incluyendo campos generados
+      return {
+        ...mockFile, // Usar los valores base de mockFile
+        id: data.data.id || 1, // Usar el id proporcionado o un default
+        nombre_archivo_almacenado: data.data.nombre_archivo_almacenado, // Este es el importante que viene de Multer
+        ruta_almacenamiento_fisico: data.data.ruta_almacenamiento_fisico, // También de Multer
+        tamano_bytes: data.data.tamano_bytes,
+        mime_type: data.data.mime_type,
+        fecha_subida: new Date(), // Simular la fecha actual
+        updated_at: new Date(), // Simular la fecha actual
+        cliente_id: data.data.cliente_id,
+        lugar_id: data.data.lugar_id,
+        tipo_servicio_id: data.data.tipo_servicio_id,
+        nombre_original_archivo: data.data.nombre_original_archivo,
+      };
+    });
 
     const response = await request(app)
       .post('/api/v1/files/upload')
@@ -152,9 +171,38 @@ describe('File Upload Endpoint (/api/v1/files/upload)', () => {
     expect(response.body.message).toBe('Archivo subido exitosamente.');
     expect(response.body.file).toMatchObject({
       nombre_original_archivo: 'test.txt',
-      // ... otros campos esperados
+      mime_type: 'text/plain',
+      tamano_bytes: 12,
+      cliente_id: 1,
+      lugar_id: 1,
+      tipo_servicio_id: 1,
+      // No se puede predecir nombre_archivo_almacenado ni ruta_almacenamiento_fisico porque contienen UUIDs
+      // Se puede verificar que existan:
+      // nombre_archivo_almacenado: expect.any(String),
+      // ruta_almacenamiento_fisico: expect.stringContaining('uploads/Test_Client/Test_Location/Mantenimientos/'),
     });
-    expect(PrismaClient().file.create).toHaveBeenCalledTimes(1);
+    // Verificar que el nombre del archivo almacenado contenga la extensión original
+    expect(response.body.file.nombre_archivo_almacenado).toContain('.txt');
+    // Verificar la ruta base
+    expect(response.body.file.ruta_almacenamiento_fisico).toContain('uploads/Test_Client/Test_Location/Mantenimientos/');
+    
+    expect(prismaInstance.file.create).toHaveBeenCalledTimes(1);
+    // Se puede añadir una verificación más detallada de los argumentos de file.create si es necesario
+    expect(prismaInstance.file.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          nombre_original_archivo: 'test.txt',
+          mime_type: 'text/plain',
+          tamano_bytes: 12,
+          cliente_id: 1,
+          lugar_id: 1,
+          tipo_servicio_id: 1,
+          // nombre_archivo_almacenado y ruta_almacenamiento_fisico son generados y difíciles de mockear exactamente aquí
+          // a menos que se controle el UUID.
+          nombre_archivo_almacenado: expect.stringMatching(/^[0-9a-fA-F-]+\.txt$/), // UUID + .txt
+          ruta_almacenamiento_fisico: expect.stringMatching(/^uploads\/Test_Client\/Test_Location\/Mantenimientos\/[0-9a-fA-F-]+\.txt$/)
+        })
+      })
+    );
   });
-  */
 });

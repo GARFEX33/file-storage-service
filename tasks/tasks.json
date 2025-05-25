@@ -244,7 +244,7 @@
         10,
         17
       ],
-      "status": "in-progress",
+      "status": "done",
       "subtasks": []
     },
     {
@@ -258,7 +258,7 @@
         11,
         17
       ],
-      "status": "pending",
+      "status": "done",
       "subtasks": []
     },
     {
