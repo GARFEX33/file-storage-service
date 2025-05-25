@@ -1,11 +1,11 @@
 # Task ID: 5
-# Title: Implement POST /upload Endpoint
+# Title: Define Database Models
 # Status: pending
 # Dependencies: 4
 # Priority: high
-# Description: Create an endpoint to upload files and their metadata.
+# Description: Create Prisma schema for the database models: Clients, Locations, ServiceTypes, and Files.
 # Details:
-Use Multer middleware to handle file uploads. Implement the POST /upload route to save the file to the specified UPLOADS_PATH and store metadata in the database. Validate file type and size, and ensure filename uniqueness.
+Define the models in the schema.prisma file according to the specifications provided in the PRD.
 
 # Test Strategy:
-Test file uploads with various file types and sizes. Verify that duplicate filenames are rejected and metadata is correctly stored in the database.
+Run 'npx prisma validate' to ensure the schema is correct.

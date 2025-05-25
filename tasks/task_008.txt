@@ -1,11 +1,11 @@
 # Task ID: 8
-# Title: Implement DELETE /files/:id Endpoint
+# Title: Implement File Upload Logic
 # Status: pending
-# Dependencies: 5
-# Priority: medium
-# Description: Create an endpoint to delete a file and its metadata by ID.
+# Dependencies: 7
+# Priority: high
+# Description: Develop the core logic for handling file uploads through the API.
 # Details:
-Implement the DELETE /files/:id route to remove the file from the UPLOADS_PATH and delete its metadata from the database. Handle cases where the file does not exist.
+Create an endpoint 'POST /api/v1/files/upload' that uses Multer to handle file uploads and saves metadata to the database.
 
 # Test Strategy:
-Test deleting files by ID and ensure both the file and metadata are removed. Verify that non-existent IDs return a 404 error.
+Test the endpoint with various file types and validate that files are uploaded and metadata is stored correctly.

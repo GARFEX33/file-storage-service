@@ -1,11 +1,11 @@
 # Task ID: 9
-# Title: Add Validation and Error Handling
+# Title: Generate Storage Path Logic
 # Status: pending
-# Dependencies: 5
-# Priority: medium
-# Description: Implement validation and error handling across all endpoints.
+# Dependencies: 8
+# Priority: high
+# Description: Implement logic to generate dynamic storage paths for uploaded files based on metadata.
 # Details:
-Ensure all endpoints validate input data and handle errors gracefully. Return clear error messages for invalid requests or server errors.
+Create a function that constructs the storage path using the specified format from the PRD.
 
 # Test Strategy:
-Test all endpoints with invalid data and ensure appropriate error messages are returned.
+Unit test the path generation function with various inputs to ensure correct path formation.

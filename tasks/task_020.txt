@@ -1,0 +1,11 @@
+# Task ID: 20
+# Title: Write Unit Tests for File Listing
+# Status: pending
+# Dependencies: 11, 17
+# Priority: medium
+# Description: Create unit tests for the file listing functionality.
+# Details:
+Write tests to verify that files are listed correctly with various filters applied.
+
+# Test Strategy:
+Run the tests and ensure they pass without errors.

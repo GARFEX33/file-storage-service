@@ -1,11 +1,11 @@
 # Task ID: 1
 # Title: Setup Project Repository
-# Status: pending
+# Status: in-progress
 # Dependencies: None
 # Priority: high
-# Description: Initialize a new Git repository and setup the project structure.
+# Description: Initialize a new Node.js project with TypeScript and set up version control with Git.
 # Details:
-Create a new Git repository on GitHub. Clone the repository locally and set up the initial project structure as per the suggested folder structure in the PRD. Ensure that the .gitignore file is configured to exclude node_modules and other unnecessary files.
+Create a new directory for the project, run 'npm init -y' to create package.json, install TypeScript and necessary dependencies, and initialize a Git repository.
 
 # Test Strategy:
-Verify that the repository is accessible on GitHub and that the local clone matches the specified structure.
+Verify that the project initializes correctly and that the Git repository is set up.

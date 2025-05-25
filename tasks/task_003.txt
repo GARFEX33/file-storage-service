@@ -1,11 +1,11 @@
 # Task ID: 3
-# Title: Configure Prisma and Connect to PostgreSQL
+# Title: Install Express and Multer
 # Status: pending
 # Dependencies: 2
 # Priority: high
-# Description: Set up Prisma ORM and configure the connection to the PostgreSQL database.
+# Description: Add Express.js and Multer middleware to the project for handling HTTP requests and file uploads.
 # Details:
-Install Prisma and initialize it using 'npx prisma init'. Configure the DATABASE_URL in the .env file to connect to the PostgreSQL database. Run 'npx prisma generate' to generate the Prisma client.
+Run 'npm install express multer' to install the necessary packages and add type definitions for TypeScript.
 
 # Test Strategy:
-Run a simple query using Prisma to ensure the connection to the database is successful.
+Create a simple Express server and test a basic route to ensure Express is functioning.

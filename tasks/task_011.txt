@@ -1,11 +1,11 @@
 # Task ID: 11
-# Title: Prepare Dockerfile and Deployment Tests
+# Title: Implement File Listing Logic
 # Status: pending
-# Dependencies: 10
-# Priority: medium
-# Description: Create a Dockerfile for containerizing the application and test deployment.
+# Dependencies: 8
+# Priority: high
+# Description: Create functionality to list files with filtering options.
 # Details:
-Write a Dockerfile that sets up the Node.js environment, installs dependencies, and runs the application. Test the Docker container locally and ensure it runs correctly.
+Develop the endpoint 'GET /api/v1/files' that accepts query parameters for filtering and returns a paginated list of files.
 
 # Test Strategy:
-Build and run the Docker container to verify the application starts and functions as expected.
+Test the listing endpoint with various filter parameters to ensure it returns the correct results.

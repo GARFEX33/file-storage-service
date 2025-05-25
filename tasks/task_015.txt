@@ -1,0 +1,11 @@
+# Task ID: 15
+# Title: Setup OpenAPI Documentation
+# Status: pending
+# Dependencies: 14
+# Priority: medium
+# Description: Generate OpenAPI documentation for the API endpoints.
+# Details:
+Use a library like swagger-jsdoc to document the API and serve it via an endpoint.
+
+# Test Strategy:
+Access the generated documentation endpoint and verify that all API endpoints are documented correctly.

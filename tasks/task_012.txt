@@ -1,11 +1,11 @@
 # Task ID: 12
-# Title: Write README and User Manual
+# Title: Implement File Deletion Logic
 # Status: pending
-# Dependencies: 11
-# Priority: low
-# Description: Draft a README file and user manual for the project.
+# Dependencies: 8
+# Priority: high
+# Description: Create functionality to delete files and their metadata from the system.
 # Details:
-Include setup instructions, usage examples, and any other relevant information in the README. Ensure the user manual provides clear guidance on using the API.
+Develop the endpoint 'DELETE /api/v1/files/{fileId}' that removes the file from storage and deletes its metadata from the database.
 
 # Test Strategy:
-Review the README and user manual for completeness and clarity.
+Test the deletion endpoint with valid and invalid file IDs to ensure correct functionality.

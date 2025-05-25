@@ -1,11 +1,11 @@
 # Task ID: 10
-# Title: Document API with Swagger/OpenAPI
+# Title: Implement File Download Logic
 # Status: pending
-# Dependencies: 9
-# Priority: medium
-# Description: Create API documentation using Swagger/OpenAPI.
+# Dependencies: 8
+# Priority: high
+# Description: Develop the logic for downloading files via the API.
 # Details:
-Use Swagger/OpenAPI to document all API endpoints, including request and response formats, parameters, and error codes. Host the documentation for easy access.
+Create an endpoint 'GET /api/v1/files/download/{fileId}' that retrieves the file from storage and returns it to the client.
 
 # Test Strategy:
-Review the Swagger documentation to ensure it accurately reflects the API implementation.
+Test the download endpoint with valid and invalid file IDs to ensure correct functionality.

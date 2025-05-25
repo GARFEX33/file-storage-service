@@ -1,11 +1,11 @@
 # Task ID: 7
-# Title: Implement GET /files/:id Endpoint
+# Title: Seed Initial Data
 # Status: pending
-# Dependencies: 5
+# Dependencies: 6
 # Priority: medium
-# Description: Create an endpoint to download a file by its ID.
+# Description: Populate the ServiceTypes table with initial data for the application.
 # Details:
-Implement the GET /files/:id route to retrieve the file from the UPLOADS_PATH and return it as a binary response. Handle cases where the file does not exist.
+Create a seed script to insert initial service types into the database and run it using Prisma.
 
 # Test Strategy:
-Test downloading files by ID and ensure correct file retrieval. Verify that non-existent IDs return a 404 error.
+Verify that the ServiceTypes table contains the expected initial records.

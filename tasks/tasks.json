@@ -3,20 +3,20 @@
     {
       "id": 1,
       "title": "Setup Project Repository",
-      "description": "Initialize a new Git repository and setup the project structure.",
-      "details": "Create a new Git repository on GitHub. Clone the repository locally and set up the initial project structure as per the suggested folder structure in the PRD. Ensure that the .gitignore file is configured to exclude node_modules and other unnecessary files.",
-      "testStrategy": "Verify that the repository is accessible on GitHub and that the local clone matches the specified structure.",
+      "description": "Initialize a new Node.js project with TypeScript and set up version control with Git.",
+      "details": "Create a new directory for the project, run 'npm init -y' to create package.json, install TypeScript and necessary dependencies, and initialize a Git repository.",
+      "testStrategy": "Verify that the project initializes correctly and that the Git repository is set up.",
       "priority": "high",
       "dependencies": [],
-      "status": "pending",
+      "status": "in-progress",
       "subtasks": []
     },
     {
       "id": 2,
-      "title": "Initialize Node.js Project with Express",
-      "description": "Set up a basic Node.js project using Express framework.",
-      "details": "Run 'npm init' to create a package.json file. Install Express using 'npm install express'. Create an entry point file (e.g., app.js) and set up a basic Express server that listens on a specified port.",
-      "testStrategy": "Start the server and access the default route to ensure the server is running.",
+      "title": "Configure TypeScript",
+      "description": "Set up TypeScript configuration for the project.",
+      "details": "Create a tsconfig.json file with appropriate settings for Node.js and TypeScript, including module resolution and target settings.",
+      "testStrategy": "Compile a simple TypeScript file to ensure the configuration is correct.",
       "priority": "high",
       "dependencies": [
         1
@@ -26,10 +26,10 @@
     },
     {
       "id": 3,
-      "title": "Configure Prisma and Connect to PostgreSQL",
-      "description": "Set up Prisma ORM and configure the connection to the PostgreSQL database.",
-      "details": "Install Prisma and initialize it using 'npx prisma init'. Configure the DATABASE_URL in the .env file to connect to the PostgreSQL database. Run 'npx prisma generate' to generate the Prisma client.",
-      "testStrategy": "Run a simple query using Prisma to ensure the connection to the database is successful.",
+      "title": "Install Express and Multer",
+      "description": "Add Express.js and Multer middleware to the project for handling HTTP requests and file uploads.",
+      "details": "Run 'npm install express multer' to install the necessary packages and add type definitions for TypeScript.",
+      "testStrategy": "Create a simple Express server and test a basic route to ensure Express is functioning.",
       "priority": "high",
       "dependencies": [
         2
@@ -39,10 +39,10 @@
     },
     {
       "id": 4,
-      "title": "Define and Migrate File Model",
-      "description": "Define the File model in Prisma and migrate it to the database.",
-      "details": "Update the schema.prisma file to include the File model as specified in the PRD. Run 'npx prisma migrate dev --name init' to create the migration and apply it to the database.",
-      "testStrategy": "Check the PostgreSQL database to ensure the File table is created with the correct schema.",
+      "title": "Setup Prisma ORM",
+      "description": "Integrate Prisma ORM for database interactions with PostgreSQL.",
+      "details": "Install Prisma CLI and initialize Prisma in the project. Configure the database connection in .env file.",
+      "testStrategy": "Run 'npx prisma init' and verify that the Prisma folder is created with the correct configuration.",
       "priority": "high",
       "dependencies": [
         3
@@ -52,10 +52,10 @@
     },
     {
       "id": 5,
-      "title": "Implement POST /upload Endpoint",
-      "description": "Create an endpoint to upload files and their metadata.",
-      "details": "Use Multer middleware to handle file uploads. Implement the POST /upload route to save the file to the specified UPLOADS_PATH and store metadata in the database. Validate file type and size, and ensure filename uniqueness.",
-      "testStrategy": "Test file uploads with various file types and sizes. Verify that duplicate filenames are rejected and metadata is correctly stored in the database.",
+      "title": "Define Database Models",
+      "description": "Create Prisma schema for the database models: Clients, Locations, ServiceTypes, and Files.",
+      "details": "Define the models in the schema.prisma file according to the specifications provided in the PRD.",
+      "testStrategy": "Run 'npx prisma validate' to ensure the schema is correct.",
       "priority": "high",
       "dependencies": [
         4
@@ -65,11 +65,11 @@
     },
     {
       "id": 6,
-      "title": "Implement GET /files Endpoint",
-      "description": "Create an endpoint to list all files and their metadata.",
-      "details": "Implement the GET /files route to query the database for all files. Support pagination and filtering based on query parameters. Return a JSON array of file metadata.",
-      "testStrategy": "Test the endpoint with different pagination and filter parameters to ensure correct data retrieval.",
-      "priority": "medium",
+      "title": "Create Database Migrations",
+      "description": "Generate and apply migrations for the defined database models.",
+      "details": "Run 'npx prisma migrate dev --name init' to create and apply the initial migration to the PostgreSQL database.",
+      "testStrategy": "Check the database to ensure that the tables are created as per the defined schema.",
+      "priority": "high",
       "dependencies": [
         5
       ],
@@ -78,78 +78,255 @@
     },
     {
       "id": 7,
-      "title": "Implement GET /files/:id Endpoint",
-      "description": "Create an endpoint to download a file by its ID.",
-      "details": "Implement the GET /files/:id route to retrieve the file from the UPLOADS_PATH and return it as a binary response. Handle cases where the file does not exist.",
-      "testStrategy": "Test downloading files by ID and ensure correct file retrieval. Verify that non-existent IDs return a 404 error.",
+      "title": "Seed Initial Data",
+      "description": "Populate the ServiceTypes table with initial data for the application.",
+      "details": "Create a seed script to insert initial service types into the database and run it using Prisma.",
+      "testStrategy": "Verify that the ServiceTypes table contains the expected initial records.",
       "priority": "medium",
       "dependencies": [
-        5
+        6
       ],
       "status": "pending",
       "subtasks": []
     },
     {
       "id": 8,
-      "title": "Implement DELETE /files/:id Endpoint",
-      "description": "Create an endpoint to delete a file and its metadata by ID.",
-      "details": "Implement the DELETE /files/:id route to remove the file from the UPLOADS_PATH and delete its metadata from the database. Handle cases where the file does not exist.",
-      "testStrategy": "Test deleting files by ID and ensure both the file and metadata are removed. Verify that non-existent IDs return a 404 error.",
-      "priority": "medium",
+      "title": "Implement File Upload Logic",
+      "description": "Develop the core logic for handling file uploads through the API.",
+      "details": "Create an endpoint 'POST /api/v1/files/upload' that uses Multer to handle file uploads and saves metadata to the database.",
+      "testStrategy": "Test the endpoint with various file types and validate that files are uploaded and metadata is stored correctly.",
+      "priority": "high",
       "dependencies": [
-        5
+        7
       ],
       "status": "pending",
       "subtasks": []
     },
     {
       "id": 9,
-      "title": "Add Validation and Error Handling",
-      "description": "Implement validation and error handling across all endpoints.",
-      "details": "Ensure all endpoints validate input data and handle errors gracefully. Return clear error messages for invalid requests or server errors.",
-      "testStrategy": "Test all endpoints with invalid data and ensure appropriate error messages are returned.",
-      "priority": "medium",
+      "title": "Generate Storage Path Logic",
+      "description": "Implement logic to generate dynamic storage paths for uploaded files based on metadata.",
+      "details": "Create a function that constructs the storage path using the specified format from the PRD.",
+      "testStrategy": "Unit test the path generation function with various inputs to ensure correct path formation.",
+      "priority": "high",
       "dependencies": [
-        5
+        8
       ],
       "status": "pending",
       "subtasks": []
     },
     {
       "id": 10,
-      "title": "Document API with Swagger/OpenAPI",
-      "description": "Create API documentation using Swagger/OpenAPI.",
-      "details": "Use Swagger/OpenAPI to document all API endpoints, including request and response formats, parameters, and error codes. Host the documentation for easy access.",
-      "testStrategy": "Review the Swagger documentation to ensure it accurately reflects the API implementation.",
-      "priority": "medium",
+      "title": "Implement File Download Logic",
+      "description": "Develop the logic for downloading files via the API.",
+      "details": "Create an endpoint 'GET /api/v1/files/download/{fileId}' that retrieves the file from storage and returns it to the client.",
+      "testStrategy": "Test the download endpoint with valid and invalid file IDs to ensure correct functionality.",
+      "priority": "high",
       "dependencies": [
-        9
+        8
       ],
       "status": "pending",
       "subtasks": []
     },
     {
       "id": 11,
-      "title": "Prepare Dockerfile and Deployment Tests",
-      "description": "Create a Dockerfile for containerizing the application and test deployment.",
-      "details": "Write a Dockerfile that sets up the Node.js environment, installs dependencies, and runs the application. Test the Docker container locally and ensure it runs correctly.",
-      "testStrategy": "Build and run the Docker container to verify the application starts and functions as expected.",
-      "priority": "medium",
+      "title": "Implement File Listing Logic",
+      "description": "Create functionality to list files with filtering options.",
+      "details": "Develop the endpoint 'GET /api/v1/files' that accepts query parameters for filtering and returns a paginated list of files.",
+      "testStrategy": "Test the listing endpoint with various filter parameters to ensure it returns the correct results.",
+      "priority": "high",
       "dependencies": [
-        10
+        8
       ],
       "status": "pending",
       "subtasks": []
     },
     {
       "id": 12,
-      "title": "Write README and User Manual",
-      "description": "Draft a README file and user manual for the project.",
-      "details": "Include setup instructions, usage examples, and any other relevant information in the README. Ensure the user manual provides clear guidance on using the API.",
-      "testStrategy": "Review the README and user manual for completeness and clarity.",
-      "priority": "low",
+      "title": "Implement File Deletion Logic",
+      "description": "Create functionality to delete files and their metadata from the system.",
+      "details": "Develop the endpoint 'DELETE /api/v1/files/{fileId}' that removes the file from storage and deletes its metadata from the database.",
+      "testStrategy": "Test the deletion endpoint with valid and invalid file IDs to ensure correct functionality.",
+      "priority": "high",
       "dependencies": [
-        11
+        8
+      ],
+      "status": "pending",
+      "subtasks": []
+    },
+    {
+      "id": 13,
+      "title": "Implement Input Validation",
+      "description": "Add validation for API input parameters to ensure data integrity.",
+      "details": "Use a validation library to validate incoming requests for file uploads, downloads, listings, and deletions.",
+      "testStrategy": "Test the API endpoints with invalid inputs to ensure proper error handling and validation messages.",
+      "priority": "medium",
+      "dependencies": [
+        8
+      ],
+      "status": "pending",
+      "subtasks": []
+    },
+    {
+      "id": 14,
+      "title": "Error Handling Implementation",
+      "description": "Implement standardized error handling across the API.",
+      "details": "Create a middleware for handling errors and returning consistent JSON error responses.",
+      "testStrategy": "Trigger various errors in the API and verify that the responses are consistent and informative.",
+      "priority": "medium",
+      "dependencies": [
+        13
+      ],
+      "status": "pending",
+      "subtasks": []
+    },
+    {
+      "id": 15,
+      "title": "Setup OpenAPI Documentation",
+      "description": "Generate OpenAPI documentation for the API endpoints.",
+      "details": "Use a library like swagger-jsdoc to document the API and serve it via an endpoint.",
+      "testStrategy": "Access the generated documentation endpoint and verify that all API endpoints are documented correctly.",
+      "priority": "medium",
+      "dependencies": [
+        14
+      ],
+      "status": "pending",
+      "subtasks": []
+    },
+    {
+      "id": 16,
+      "title": "Implement Docker Configuration",
+      "description": "Create Docker configuration for the application to facilitate deployment.",
+      "details": "Create a Dockerfile and docker-compose.yml to containerize the application and PostgreSQL database.",
+      "testStrategy": "Build and run the Docker containers and verify that the application is accessible.",
+      "priority": "medium",
+      "dependencies": [
+        15
+      ],
+      "status": "pending",
+      "subtasks": []
+    },
+    {
+      "id": 17,
+      "title": "Setup Testing Framework",
+      "description": "Integrate a testing framework for unit and integration tests.",
+      "details": "Install a testing library like Jest and configure it for TypeScript.",
+      "testStrategy": "Write and run a simple test to ensure the testing framework is set up correctly.",
+      "priority": "medium",
+      "dependencies": [
+        16
+      ],
+      "status": "pending",
+      "subtasks": []
+    },
+    {
+      "id": 18,
+      "title": "Write Unit Tests for File Upload",
+      "description": "Create unit tests for the file upload functionality.",
+      "details": "Write tests to verify that files are uploaded correctly and that metadata is stored as expected.",
+      "testStrategy": "Run the tests and ensure they pass without errors.",
+      "priority": "medium",
+      "dependencies": [
+        8,
+        17
+      ],
+      "status": "pending",
+      "subtasks": []
+    },
+    {
+      "id": 19,
+      "title": "Write Unit Tests for File Download",
+      "description": "Create unit tests for the file download functionality.",
+      "details": "Write tests to verify that files can be downloaded correctly based on file IDs.",
+      "testStrategy": "Run the tests and ensure they pass without errors.",
+      "priority": "medium",
+      "dependencies": [
+        10,
+        17
+      ],
+      "status": "pending",
+      "subtasks": []
+    },
+    {
+      "id": 20,
+      "title": "Write Unit Tests for File Listing",
+      "description": "Create unit tests for the file listing functionality.",
+      "details": "Write tests to verify that files are listed correctly with various filters applied.",
+      "testStrategy": "Run the tests and ensure they pass without errors.",
+      "priority": "medium",
+      "dependencies": [
+        11,
+        17
+      ],
+      "status": "pending",
+      "subtasks": []
+    },
+    {
+      "id": 21,
+      "title": "Write Unit Tests for File Deletion",
+      "description": "Create unit tests for the file deletion functionality.",
+      "details": "Write tests to verify that files are deleted correctly and that metadata is removed from the database.",
+      "testStrategy": "Run the tests and ensure they pass without errors.",
+      "priority": "medium",
+      "dependencies": [
+        12,
+        17
+      ],
+      "status": "pending",
+      "subtasks": []
+    },
+    {
+      "id": 22,
+      "title": "Implement Logging Mechanism",
+      "description": "Add logging to the application for monitoring and debugging purposes.",
+      "details": "Integrate a logging library like Winston to log API requests and errors.",
+      "testStrategy": "Verify that logs are generated correctly for various API interactions.",
+      "priority": "medium",
+      "dependencies": [
+        14
+      ],
+      "status": "pending",
+      "subtasks": []
+    },
+    {
+      "id": 23,
+      "title": "Conduct Performance Testing",
+      "description": "Test the performance of the API under load to ensure it meets requirements.",
+      "details": "Use a tool like Apache JMeter to simulate load and measure response times for various endpoints.",
+      "testStrategy": "Analyze the results to ensure the API performs well under expected load conditions.",
+      "priority": "medium",
+      "dependencies": [
+        18,
+        19,
+        20,
+        21
+      ],
+      "status": "pending",
+      "subtasks": []
+    },
+    {
+      "id": 24,
+      "title": "Review Security Practices",
+      "description": "Review and implement security best practices for the API.",
+      "details": "Ensure that the API is protected against common vulnerabilities such as SQL injection, XSS, and CSRF.",
+      "testStrategy": "Conduct a security audit and test for vulnerabilities.",
+      "priority": "medium",
+      "dependencies": [
+        22
+      ],
+      "status": "pending",
+      "subtasks": []
+    },
+    {
+      "id": 25,
+      "title": "Prepare for Deployment",
+      "description": "Finalize the application for deployment to production.",
+      "details": "Ensure all configurations are set for production, including environment variables and database connections.",
+      "testStrategy": "Deploy the application to a staging environment and verify that all functionalities work as expected.",
+      "priority": "high",
+      "dependencies": [
+        23,
+        24
       ],
       "status": "pending",
       "subtasks": []

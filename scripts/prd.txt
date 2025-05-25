@@ -1,98 +1,245 @@
-1. Resumen del Servicio
+# Product Requirements Document: File Storage Service
 
-Microservicio encargado de almacenar archivos (fotos, PDF, etc.), exponer una API REST para subir, listar, descargar y eliminar archivos, y guardar metadatos en PostgreSQL.
-No se implementa control de versiones: si un archivo ya existe, la subida será rechazada.
+## Overview
+Este documento describe los requisitos para el `file-storage-service`. El propósito principal de este microservicio es proporcionar una solución centralizada y organizada para el almacenamiento y la gestión de archivos diversos (fotos, PDFs, reportes, etc.) generados en el contexto de los servicios prestados por la empresa, tales como mantenimientos, levantamientos y obras.
 
-2. Stack Tecnológico
+**Problema que Resuelve:** La necesidad de un sistema unificado para almacenar, organizar y acceder a archivos relacionados con los servicios de la empresa, actualmente dispersos o gestionados de forma manual.
 
-- Node.js + Express: API REST
-- Multer: Manejo de archivos
-- Prisma: ORM para PostgreSQL
-- PostgreSQL: Base de datos (ya instalada)
-- Docker: Contenerización
-- Swagger/OpenAPI: Documentación de la API
-- Github
+**Para Quién es:** Otros microservicios, aplicaciones internas y, potencialmente, desarrolladores que necesiten integrar funcionalidades de gestión de archivos.
 
-3. Modelo de Datos (Prisma)
+**Valor:**
+*   **Almacenamiento Centralizado:** Guardar archivos de manera segura y estructurada.
+*   **Acceso Programático:** Exponer una API REST para la interacción con los archivos.
+*   **Gestión de Metadatos:** Almacenar y consultar metadatos relevantes.
+*   **Organización Lógica:** Implementar una estructura de carpetas intuitiva.
+*   **Facilitar la Integración:** Servir como un servicio de apoyo.
 
-model File {
-  id         Int      @id @default(autoincrement())
-  filename   String   @unique
-  path       String
-  uploadedAt DateTime @default(now())
-  user       String
-  location   String?
-  filetype   String
-  // Otros campos según necesidad
-}
+## Core Features
 
-4. Endpoints de la API
+1.  **Carga de Archivos:**
+    *   **Qué hace:** Permite la subida de archivos individuales a través de la API.
+    *   **Por qué es importante:** Es la funcionalidad principal para ingresar archivos al sistema.
+    *   **Cómo funciona:** Un endpoint API (`POST /api/v1/files/upload`) acepta `multipart/form-data` con el archivo y metadatos asociados (cliente, lugar, tipo de servicio, etc.). El servicio genera una ruta de almacenamiento basada en estos metadatos y guarda el archivo físicamente, registrando la información en la base de datos.
 
-- POST /upload
-  - Sube un archivo y sus metadatos.
-  - Request: multipart/form-data (archivo + campos de metadatos)
-  - Validaciones: Rechazar si el archivo ya existe (filename único). Validar tipo y tamaño de archivo.
-  - Response: 201 Created con metadatos del archivo. 409 Conflict si el archivo ya existe.
+2.  **Descarga de Archivos:**
+    *   **Qué hace:** Permite la descarga de archivos individuales a través de la API mediante un identificador único.
+    *   **Por qué es importante:** Permite a los sistemas consumidores recuperar los archivos almacenados.
+    *   **Cómo funciona:** Un endpoint API (`GET /api/v1/files/download/{fileId}`) devuelve el contenido binario del archivo.
 
-- GET /files
-  - Lista todos los archivos y sus metadatos.
-  - Query params: paginación (page, limit), filtros (user, fecha, etc.)
-  - Response: Array de archivos con metadatos.
+3.  **Listado de Archivos:**
+    *   **Qué hace:** Provee la capacidad de listar archivos y sus metadatos, con opciones de filtrado.
+    *   **Por qué es importante:** Permite a los usuarios y sistemas encontrar archivos específicos basados en criterios.
+    *   **Cómo funciona:** Un endpoint API (`GET /api/v1/files`) acepta parámetros de consulta para filtrar por cliente, lugar, tipo de servicio, fecha de realización, etc., y devuelve una lista paginada de archivos.
 
-- GET /files/:id
-  - Descarga un archivo por su id.
-  - Response: Archivo binario.
+4.  **Eliminación de Archivos:**
+    *   **Qué hace:** Permite la eliminación de archivos y sus metadatos correspondientes.
+    *   **Por qué es importante:** Permite gestionar el ciclo de vida de los archivos.
+    *   **Cómo funciona:** Un endpoint API (`DELETE /api/v1/files/{fileId}`) elimina el archivo físico y su registro en la base de datos.
 
-- DELETE /files/:id
-  - Elimina un archivo y su registro de metadatos.
-  - Response: 200 OK o 404 si no existe.
+5.  **Almacenamiento de Metadatos:**
+    *   **Qué hace:** Guarda información contextual sobre cada archivo en PostgreSQL.
+    *   **Por qué es importante:** Enriquece los archivos con información que facilita su búsqueda, organización y comprensión.
+    *   **Cómo funciona:** La base de datos contiene tablas para `Archivos`, `Clientes`, `Lugares`, y `TiposServicio`, con campos como nombre original, ruta, tamaño, MIME type, cliente, lugar, tipo de servicio, fecha de realización del servicio, etc.
 
-5. Reglas de Negocio
+6.  **Estructura de Carpetas Dinámica:**
+    *   **Qué hace:** Crea y organiza archivos en el sistema de ficheros siguiendo una lógica predefinida basada en el tipo de servicio y otros parámetros.
+    *   **Por qué es importante:** Asegura una organización consistente y predecible de los archivos físicos.
+    *   **Cómo funciona:** La ruta se forma como `{CarpetaPrincipal}/{Cliente}/{Lugar}/{SubNivel_1}/{SubNivel_2_Opcional}/{NombreArchivoConExtension}`, donde los componentes varían según el tipo de servicio (Mantenimientos, Levantamientos, Obras) y sus datos asociados (periodicidad, equipo, tarea).
 
-- No permitir archivos duplicados (por nombre).
-- Validar tipo y tamaño de archivo.
-- Guardar todos los metadatos relevantes.
-- Manejar errores y devolver mensajes claros.
-- Documentar la API con Swagger/OpenAPI.
+**Funcionalidades Excluidas (MVP):**
+*   Control de Versiones de Archivos.
+*   Transformación de Archivos.
+*   Interfaz de Usuario (UI) dedicada (es un servicio backend).
+*   Autenticación/Autorización Avanzada (se asume a nivel de gateway o cliente API).
 
-6. Estructura de Carpetas Sugerida
+## User Experience
 
-/src
-  /controllers
-  /routes
-  /middlewares
-  /services
-  /utils
-  /uploads
-/prisma
-  schema.prisma
-Dockerfile
-.env
-README.md
+La interacción principal con el `file-storage-service` es a través de su API REST. No habrá una interfaz de usuario directa proporcionada por este microservicio.
 
-7. Variables de Entorno
+**User Personas:**
+*   **Desarrollador de Backend (Otro Microservicio):** Necesita integrar su servicio para subir o recuperar archivos relacionados con las operaciones de su dominio (e.g., un servicio de gestión de órdenes de trabajo que adjunta reportes).
+*   **Desarrollador Frontend (Aplicación Cliente):** Necesita consumir la API para permitir a los usuarios finales subir imágenes o documentos desde una aplicación web o móvil.
 
-- DATABASE_URL: conexión a PostgreSQL
-- UPLOADS_PATH: ruta para guardar archivos subidos
-- Otros según necesidad
+**Key User Flows (API Interaction):**
+1.  **Subir un archivo:**
+    *   El sistema cliente envía una petición `POST` a `/api/v1/files/upload` con el archivo y los metadatos requeridos.
+    *   El servicio valida los datos, determina la ruta de almacenamiento, guarda el archivo y los metadatos.
+    *   El servicio responde con los detalles del archivo creado, incluyendo su ID y URL de descarga.
+2.  **Listar archivos de un cliente específico para un tipo de servicio:**
+    *   El sistema cliente envía una petición `GET` a `/api/v1/files` con `clienteNombre=X` y `tipoServicioNombre=Y`.
+    *   El servicio consulta la base de datos y devuelve una lista paginada de archivos que coinciden.
+3.  **Descargar un archivo:**
+    *   El sistema cliente envía una petición `GET` a `/api/v1/files/download/{fileId}`.
+    *   El servicio recupera el archivo del sistema de ficheros y lo transmite en la respuesta.
+4.  **Eliminar un archivo:**
+    *   El sistema cliente envía una petición `DELETE` a `/api/v1/files/{fileId}`.
+    *   El servicio elimina el archivo físico y su registro en la base de datos.
 
-8. Tareas Iniciales a Asignar
+**UI/UX Considerations:**
+*   La API debe ser clara, consistente y bien documentada (OpenAPI).
+*   Los mensajes de error deben ser informativos.
+*   Los nombres de los parámetros y los campos de respuesta deben ser intuitivos.
 
-- Configurar proyecto base Node.js + Express
-- Configurar Prisma y conexión a PostgreSQL
-- Definir y migrar el modelo File
-- Implementar endpoint POST /upload
-- Implementar endpoint GET /files
-- Implementar endpoint GET /files/:id
-- Implementar endpoint DELETE /files/:id
-- Agregar validaciones y manejo de errores
-- Agregar documentación Swagger/OpenAPI
-- Preparar Dockerfile y pruebas de despliegue
-- Redactar README y manual de uso
+## Technical Architecture
 
-9. Notas y Consideraciones
+**System Components:**
+1.  **API REST (Node.js + Express en TypeScript):** Punto de entrada para todas las interacciones.
+2.  **Lógica de Negocio:** Implementa las reglas para la gestión de archivos.
+3.  **Manejo de Archivos (Multer):** Middleware para procesar archivos subidos.
+4.  **Almacenamiento Físico de Archivos:** Volumen en el sistema de archivos del servidor.
+5.  **ORM (Prisma):** Capa de abstracción para la base de datos.
+6.  **Base de Datos de Metadatos (PostgreSQL):** Almacena información descriptiva.
 
-- No implementar control de versiones de archivos.
-- Si en el futuro se requiere, se agregará como nueva funcionalidad.
-- Mantener el código modular y documentado.
-- Usar control de versiones (Git) para el proyecto.
+```mermaid
+graph TD
+    ClienteAPI[Cliente de la API / Otra Aplicación] -->|HTTP Request| APIGateway(API Gateway / Load Balancer);
+    APIGateway -->|HTTP Request| FileStorageService[file-storage-service];
+
+    subgraph FileStorageService
+        APIRest[API REST (Express.js)]
+        LogicaNegocio[Lógica de Negocio]
+        MulterMiddleware[Multer (Manejo de Archivos)]
+        PrismaORM[Prisma ORM]
+
+        APIRest -- Procesa Petición --> MulterMiddleware;
+        MulterMiddleware -- Archivo --> LogicaNegocio;
+        APIRest -- Datos Petición --> LogicaNegocio;
+        LogicaNegocio -- CRUD Metadatos --> PrismaORM;
+        LogicaNegocio -- Guarda/Lee Archivo --> SistemaArchivos[Sistema de Archivos / Volumen];
+        PrismaORM -- SQL --> PostgreSQL[Base de Datos PostgreSQL];
+    end
+```
+
+**Data Models (PostgreSQL):**
+*   **`Clientes`**: `id`, `nombre_cliente`, `detalles`, `created_at`, `updated_at`.
+*   **`Lugares`**: `id`, `nombre_lugar`, `direccion`, `detalles`, `created_at`, `updated_at`.
+*   **`TiposServicio`**: `id`, `nombre_tipo_servicio` ("Mantenimientos", "Levantamientos", "Obras"), `descripcion`, `created_at`, `updated_at`.
+*   **`Archivos`**: `id`, `nombre_original_archivo`, `nombre_archivo_almacenado`, `mime_type`, `tamano_bytes`, `ruta_almacenamiento_fisico`, `cliente_id` (FK), `lugar_id` (FK), `tipo_servicio_id` (FK), `periodicidad`, `nombre_equipo`, `identificador_tarea`, `fecha_realizacion_servicio`, `hash_contenido`, `metadatos_adicionales`, `subido_por_usuario_id`, `fecha_subida`, `updated_at`.
+
+**APIs and Integrations:**
+*   API REST interna expuesta por el servicio.
+*   Integración con una base de datos PostgreSQL existente.
+*   Integración con el sistema de archivos del servidor para el almacenamiento físico.
+
+**Infrastructure Requirements:**
+*   Servidor Node.js.
+*   Instancia de PostgreSQL.
+*   Volumen de almacenamiento persistente.
+*   Docker para contenerización.
+*   (Opcional) API Gateway o Load Balancer.
+
+**Stack Tecnológico:**
+*   **Backend:** Node.js, Express.js (TypeScript)
+*   **Carga de Archivos:** Multer
+*   **ORM:** Prisma
+*   **Base de Datos:** PostgreSQL
+*   **Contenerización:** Docker
+*   **Documentación API:** OpenAPI (Swagger)
+*   **Control de Versiones:** Git (Github)
+
+## Development Roadmap
+
+**MVP Requirements:**
+1.  **Configuración del Proyecto:**
+    *   Estructura del proyecto Node.js (TypeScript).
+    *   Configuración de Prisma y conexión a PostgreSQL.
+    *   Configuración de Express y Multer.
+2.  **Modelo de Datos y Migraciones:**
+    *   Definición de esquemas Prisma para `Clientes`, `Lugares`, `TiposServicio`, `Archivos`.
+    *   Creación de migraciones de base de datos.
+    *   Población inicial de `TiposServicio`.
+3.  **Lógica de Negocio Central:**
+    *   Función para generar rutas de almacenamiento dinámicas y sanitizadas.
+    *   Lógica para crear/buscar entidades (`Clientes`, `Lugares`) durante la carga.
+4.  **API Endpoints (CRUD Básico):**
+    *   `POST /api/v1/files/upload`: Carga de archivos con manejo de metadatos y almacenamiento físico. Verificación de duplicados por ruta completa.
+    *   `GET /api/v1/files`: Listado de archivos con filtros básicos (cliente, lugar, tipo de servicio, fecha de realización). Paginación.
+    *   `GET /api/v1/files/download/{fileId}`: Descarga de archivos.
+    *   `DELETE /api/v1/files/{fileId}`: Eliminación de archivos.
+5.  **Validaciones y Manejo de Errores:**
+    *   Validación de parámetros de entrada en la API.
+    *   Manejo de errores estándar y respuestas JSON.
+6.  **Documentación API:**
+    *   Generación de especificación OpenAPI básica.
+7.  **Contenerización:**
+    *   Creación de `Dockerfile` y `docker-compose.yml` para desarrollo.
+
+**Future Enhancements (Post-MVP):**
+*   Integración con Almacenamiento en la Nube (AWS S3, Google Cloud Storage, etc.).
+*   Procesamiento Asíncrono para archivos grandes o tareas post-subida.
+*   Control de Versiones de Archivos (si es necesario).
+*   Búsqueda de Texto Completo en el contenido de los archivos.
+*   Políticas de Retención y Archivado.
+*   Mejoras en los filtros de listado (más campos, rangos de fechas más flexibles).
+*   Mecanismos de autenticación/autorización más robustos si no son provistos externamente.
+*   Cálculo y almacenamiento de hash de contenido para detección de duplicados exactos (opcional).
+
+## Logical Dependency Chain
+
+1.  **Fundación del Proyecto y Base de Datos:**
+    *   Definir y configurar el esquema de la base de datos (Prisma).
+    *   Establecer la estructura básica del proyecto Node.js/Express.
+2.  **Lógica de Negocio Principal:**
+    *   Implementar la lógica para la generación de rutas de almacenamiento.
+    *   Desarrollar la lógica para el manejo de entidades (Clientes, Lugares, TiposServicio).
+3.  **Funcionalidad de Carga (Core):**
+    *   Implementar el endpoint de carga de archivos, incluyendo el guardado físico y el registro de metadatos.
+4.  **Funcionalidades de Lectura:**
+    *   Implementar el endpoint de listado de archivos.
+    *   Implementar el endpoint de descarga de archivos.
+5.  **Funcionalidad de Eliminación:**
+    *   Implementar el endpoint de eliminación de archivos.
+6.  **Operaciones Complementarias:**
+    *   Validaciones, manejo de errores.
+    *   Documentación OpenAPI.
+    *   Contenerización.
+7.  **Mejoras y Características Adicionales (Post-MVP):**
+    *   Abordar las "Futuras Mejoras" según la priorización.
+
+El objetivo es tener un ciclo funcional de Carga -> Listado -> Descarga -> Eliminación lo antes posible, sobre el cual se puedan construir más filtros y mejoras.
+
+## Risks and Mitigations
+
+1.  **Gestión de Rutas y Nombres de Archivo:**
+    *   **Riesgo:** Caracteres inválidos en nombres de cliente, lugar, etc., pueden romper la estructura de directorios o causar problemas de seguridad (Path Traversal).
+    *   **Mitigación:** Implementar una sanitización robusta de todos los componentes de la ruta. Validar estrictamente las entradas.
+
+2.  **Seguridad del Sistema de Archivos:**
+    *   **Riesgo:** Permisos incorrectos podrían permitir acceso no autorizado o la ejecución de archivos maliciosos.
+    *   **Mitigación:** El servicio Node.js debe correr con los mínimos privilegios necesarios. Considerar no servir archivos directamente si es posible, o hacerlo con cabeceras de seguridad adecuadas. Validar tipos MIME y considerar límites de tamaño.
+
+3.  **Escalabilidad del Almacenamiento Físico:**
+    *   **Riesgo:** El almacenamiento en el servidor local puede llenarse.
+    *   **Mitigación (MVP):** Monitorear el uso del disco.
+    *   **Mitigación (Futuro):** Planificar la migración a almacenamiento en la nube (S3, etc.) como se indica en futuras mejoras.
+
+4.  **Manejo de Errores en Operaciones de Archivo:**
+    *   **Riesgo:** Fallos al escribir, leer o eliminar archivos del disco pueden dejar el sistema en un estado inconsistente (metadatos sin archivo o viceversa).
+    *   **Mitigación:** Implementar un manejo de errores cuidadoso y, potencialmente, mecanismos de rollback o reintento para operaciones críticas. Transacciones en la base de datos para asegurar atomicidad de metadatos.
+
+5.  **Consistencia de Datos (Cliente, Lugar):**
+    *   **Riesgo:** Creación de múltiples registros para el mismo cliente/lugar si los nombres varían ligeramente (e.g., "Cliente X" vs "Clientex").
+    *   **Mitigación:** Usar lógica de `UPSERT` y considerar normalización/sanitización de nombres antes de la búsqueda/creación. Podría ser necesario un UI de administración para fusionar duplicados si ocurren.
+
+6.  **Rendimiento con Gran Cantidad de Archivos/Metadatos:**
+    *   **Riesgo:** Las consultas de listado pueden volverse lentas.
+    *   **Mitigación:** Indexación adecuada en la base de datos (especialmente en campos de filtrado y ordenamiento). Paginación eficiente. Considerar optimizaciones de consulta.
+
+7.  **Dependencia de la Estructura de Carpetas:**
+    *   **Riesgo:** Cambios futuros en la lógica de la estructura de carpetas podrían dificultar la búsqueda de archivos antiguos si no se maneja con cuidado.
+    *   **Mitigación:** La `ruta_almacenamiento_fisico` se guarda en la base de datos, lo que desacopla la recuperación del archivo de la lógica de generación de ruta en tiempo de ejecución para archivos ya existentes. Sin embargo, la consistencia es clave.
+
+## Appendix
+
+**Stack Tecnológico Detallado:**
+*   **Lenguaje de Programación:** TypeScript
+*   **Framework Backend:** Node.js con Express.js
+*   **Manejo de Carga de Archivos:** Multer
+*   **ORM (Object-Relational Mapper):** Prisma
+*   **Base de Datos:** PostgreSQL
+*   **Contenerización:** Docker
+*   **Documentación de API:** OpenAPI Specification (generada, por ejemplo, con `swagger-jsdoc` y `swagger-ui-express`)
+*   **Control de Versiones (Código Fuente):** Git (alojado en Github)
+
+**Referencia Documentación OpenAPI:**
+Se generará un archivo `openapi.yaml` o `openapi.json` que describirá todos los endpoints, modelos de datos, parámetros y respuestas. Este archivo será accesible a través de un endpoint (e.g., `/api-docs`) que sirva la UI de Swagger/ReDoc.

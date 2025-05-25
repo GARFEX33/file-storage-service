@@ -1,11 +1,11 @@
 # Task ID: 6
-# Title: Implement GET /files Endpoint
+# Title: Create Database Migrations
 # Status: pending
 # Dependencies: 5
-# Priority: medium
-# Description: Create an endpoint to list all files and their metadata.
+# Priority: high
+# Description: Generate and apply migrations for the defined database models.
 # Details:
-Implement the GET /files route to query the database for all files. Support pagination and filtering based on query parameters. Return a JSON array of file metadata.
+Run 'npx prisma migrate dev --name init' to create and apply the initial migration to the PostgreSQL database.
 
 # Test Strategy:
-Test the endpoint with different pagination and filter parameters to ensure correct data retrieval.
+Check the database to ensure that the tables are created as per the defined schema.
