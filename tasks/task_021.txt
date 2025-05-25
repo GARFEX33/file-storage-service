@@ -1,6 +1,6 @@
 # Task ID: 21
 # Title: Write Unit Tests for File Deletion
-# Status: pending
+# Status: done
 # Dependencies: 12, 17
 # Priority: medium
 # Description: Create unit tests for the file deletion functionality.
