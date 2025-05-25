@@ -88,64 +88,58 @@ const upload = multer({ storage: storage, fileFilter: fileFilter, limits: { file
  *   post:
  *     summary: Sube un archivo al servidor.
  *     tags: [Files]
- *     consumes:
- *       - multipart/form-data
- *     parameters:
- *       - in: formData
- *         name: file
- *         type: file
- *         required: true
- *         description: El archivo a subir.
- *       - in: formData
- *         name: clienteNombre
- *         type: string
- *         required: true
- *         description: Nombre del cliente.
- *       - in: formData
- *         name: lugarNombre
- *         type: string
- *         required: true
- *         description: Nombre del lugar.
- *       - in: formData
- *         name: tipoServicioNombre
- *         type: string
- *         required: true
- *         description: Nombre del tipo de servicio (Mantenimientos, Levantamientos, Obras).
- *       - in: formData
- *         name: periodicidad
- *         type: string
- *         required: true
- *         description: Periodicidad (para Mantenimientos).
- *       - in: formData
- *         name: nombreEquipo
- *         type: string
- *         required: true
- *         description: Nombre del equipo (para Mantenimientos o Levantamientos).
- *       - in: formData
- *         name: fechaRealizacionServicio
- *         type: string
- *         format: date-time
- *         description: Fecha de realización del servicio (ISO 8601).
- *       - in: formData
- *         name: subidoPorUsuarioId
- *         type: string
- *         description: ID del usuario que sube el archivo.
- *       - in: formData
- *         name: metadatosAdicionales
- *         type: string
- *         description: String JSON con metadatos adicionales.
- *       - in: formData
- *         name: clienteDetalles
- *         type: string
- *         description: Detalles adicionales del cliente (si es nuevo).
- *       - in: formData
- *         name: lugarDireccion
- *         type: string
- *         description: Dirección del lugar (si es nuevo).
- *       - in: formData
- *         name: lugarDetalles
- *         type: string
- *         description: Detalles adicionales del lugar (si es nuevo).
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               file:
+ *                 type: string
+ *                 format: binary
+ *                 description: El archivo a subir.
+ *               clienteNombre:
+ *                 type: string
+ *                 description: Nombre del cliente.
+ *               lugarNombre:
+ *                 type: string
+ *                 description: Nombre del lugar.
+ *               tipoServicioNombre:
+ *                 type: string
+ *                 description: Nombre del tipo de servicio (Mantenimientos, Levantamientos, Obras).
+ *               periodicidad:
+ *                 type: string
+ *                 description: Periodicidad.
+ *               nombreEquipo:
+ *                 type: string
+ *                 description: Nombre del equipo.
+ *               fechaRealizacionServicio:
+ *                 type: string
+ *                 format: date-time
+ *                 description: Fecha de realización del servicio (ISO 8601).
+ *               subidoPorUsuarioId:
+ *                 type: string
+ *                 description: ID del usuario que sube el archivo.
+ *               metadatosAdicionales:
+ *                 type: string
+ *                 description: String JSON con metadatos adicionales.
+ *               clienteDetalles:
+ *                 type: string
+ *                 description: Detalles adicionales del cliente (si es nuevo).
+ *               lugarDireccion:
+ *                 type: string
+ *                 description: Dirección del lugar (si es nuevo).
+ *               lugarDetalles:
+ *                 type: string
+ *                 description: Detalles adicionales del lugar (si es nuevo).
+ *             required:
+ *               - file
+ *               - clienteNombre
+ *               - lugarNombre
+ *               - tipoServicioNombre
+ *               - periodicidad
+ *               - nombreEquipo
  *     responses:
  *       201:
  *         description: Archivo subido exitosamente.
