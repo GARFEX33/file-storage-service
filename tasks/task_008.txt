@@ -1,6 +1,6 @@
 # Task ID: 8
 # Title: Implement File Upload Logic
-# Status: pending
+# Status: done
 # Dependencies: 7
 # Priority: high
 # Description: Develop the core logic for handling file uploads through the API.

@@ -1,6 +1,6 @@
 # Task ID: 4
 # Title: Setup Prisma ORM
-# Status: pending
+# Status: done
 # Dependencies: 3
 # Priority: high
 # Description: Integrate Prisma ORM for database interactions with PostgreSQL.

@@ -1,6 +1,6 @@
 # Task ID: 5
 # Title: Define Database Models
-# Status: pending
+# Status: done
 # Dependencies: 4
 # Priority: high
 # Description: Create Prisma schema for the database models: Clients, Locations, ServiceTypes, and Files.

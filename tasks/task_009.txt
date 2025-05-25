@@ -1,6 +1,6 @@
 # Task ID: 9
 # Title: Generate Storage Path Logic
-# Status: pending
+# Status: done
 # Dependencies: 8
 # Priority: high
 # Description: Implement logic to generate dynamic storage paths for uploaded files based on metadata.

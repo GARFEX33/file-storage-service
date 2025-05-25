@@ -1,0 +1,76 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Client {
+  id             Int      @id @default(autoincrement())
+  nombre_cliente String   @unique
+  detalles       String?
+  created_at     DateTime @default(now())
+  updated_at     DateTime @updatedAt
+  archivos       File[]
+
+  @@map("Clientes")
+}
+
+model Location {
+  id           Int      @id @default(autoincrement())
+  nombre_lugar String   @unique
+  direccion    String?
+  detalles     String?
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+  archivos     File[]
+
+  @@map("Lugares")
+}
+
+model ServiceType {
+  id                   Int      @id @default(autoincrement())
+  nombre_tipo_servicio String   @unique // "Mantenimientos", "Levantamientos", "Obras"
+  descripcion          String?
+  created_at           DateTime @default(now())
+  updated_at           DateTime @updatedAt
+  archivos             File[]
+
+  @@map("TiposServicio")
+}
+
+model File {
+  id                         Int       @id @default(autoincrement())
+  nombre_original_archivo    String
+  nombre_archivo_almacenado  String    @unique
+  mime_type                  String
+  tamano_bytes               Int
+  ruta_almacenamiento_fisico String    @unique
+  cliente_id                 Int
+  lugar_id                   Int
+  tipo_servicio_id           Int
+  periodicidad               String? // Podría ser un Enum si los valores son fijos
+  nombre_equipo              String?
+  identificador_tarea        String?
+  fecha_realizacion_servicio DateTime?
+  hash_contenido             String?   @unique
+  metadatos_adicionales      Json?
+  subido_por_usuario_id      String? // Asumiendo que es un ID de usuario externo
+  fecha_subida               DateTime  @default(now())
+  updated_at                 DateTime  @updatedAt
+
+  cliente       Client      @relation(fields: [cliente_id], references: [id])
+  lugar         Location    @relation(fields: [lugar_id], references: [id])
+  tipo_servicio ServiceType @relation(fields: [tipo_servicio_id], references: [id])
+
+  @@map("Archivos")
+}

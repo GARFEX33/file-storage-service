@@ -8,7 +8,7 @@
       "testStrategy": "Verify that the project initializes correctly and that the Git repository is set up.",
       "priority": "high",
       "dependencies": [],
-      "status": "pending",
+      "status": "done",
       "subtasks": []
     },
     {
@@ -21,7 +21,7 @@
       "dependencies": [
         1
       ],
-      "status": "pending",
+      "status": "done",
       "subtasks": []
     },
     {
@@ -34,7 +34,7 @@
       "dependencies": [
         2
       ],
-      "status": "pending",
+      "status": "done",
       "subtasks": []
     },
     {
@@ -47,7 +47,7 @@
       "dependencies": [
         3
       ],
-      "status": "pending",
+      "status": "done",
       "subtasks": []
     },
     {
@@ -60,7 +60,7 @@
       "dependencies": [
         4
       ],
-      "status": "pending",
+      "status": "done",
       "subtasks": []
     },
     {
@@ -73,7 +73,7 @@
       "dependencies": [
         5
       ],
-      "status": "pending",
+      "status": "done",
       "subtasks": []
     },
     {
@@ -86,7 +86,7 @@
       "dependencies": [
         6
       ],
-      "status": "pending",
+      "status": "done",
       "subtasks": []
     },
     {
@@ -99,7 +99,7 @@
       "dependencies": [
         7
       ],
-      "status": "pending",
+      "status": "done",
       "subtasks": []
     },
     {
@@ -112,7 +112,7 @@
       "dependencies": [
         8
       ],
-      "status": "pending",
+      "status": "done",
       "subtasks": []
     },
     {
@@ -125,7 +125,7 @@
       "dependencies": [
         8
       ],
-      "status": "pending",
+      "status": "in-progress",
       "subtasks": []
     },
     {

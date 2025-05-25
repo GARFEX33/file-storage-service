@@ -1,6 +1,6 @@
 # Task ID: 2
 # Title: Configure TypeScript
-# Status: pending
+# Status: done
 # Dependencies: 1
 # Priority: high
 # Description: Set up TypeScript configuration for the project.

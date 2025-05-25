@@ -1,6 +1,6 @@
 # Task ID: 7
 # Title: Seed Initial Data
-# Status: pending
+# Status: done
 # Dependencies: 6
 # Priority: medium
 # Description: Populate the ServiceTypes table with initial data for the application.

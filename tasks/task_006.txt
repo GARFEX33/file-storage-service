@@ -1,6 +1,6 @@
 # Task ID: 6
 # Title: Create Database Migrations
-# Status: pending
+# Status: done
 # Dependencies: 5
 # Priority: high
 # Description: Generate and apply migrations for the defined database models.

@@ -1,6 +1,6 @@
 # Task ID: 1
 # Title: Setup Project Repository
-# Status: in-progress
+# Status: done
 # Dependencies: None
 # Priority: high
 # Description: Initialize a new Node.js project with TypeScript and set up version control with Git.
