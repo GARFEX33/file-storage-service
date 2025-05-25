@@ -2,7 +2,8 @@ import express, { Request, Response, NextFunction } from 'express';
 import multer, { FileFilterCallback } from 'multer';
 import path from 'path';
 import fs from 'fs/promises';
-import { PrismaClient, Prisma } from './generated/prisma';
+import { Prisma } from './generated/prisma'; // Solo Prisma namespace para tipos si es necesario
+import { prisma } from './dbClient'; // Importar la instancia de prisma
 import { v4 as uuidv4 } from 'uuid';
 import { generateStoragePath } from './utils';
 import {
@@ -14,7 +15,7 @@ import {
 
 const app = express();
 const port = process.env.PORT || 3000;
-const prisma = new PrismaClient();
+// const prisma = new PrismaClient(); // Ya no se crea aquí, se importa de dbClient
 
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
@@ -734,18 +735,23 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 });
 
 
-app.listen(port, () => {
-  logger.info(`Server is running on http://localhost:${port}`);
-});
+// Iniciar el servidor solo si este script se ejecuta directamente
+if (require.main === module) {
+  app.listen(port, () => {
+    logger.info(`Server is running on http://localhost:${port}`);
+  });
 
-// Manejo de cierre elegante
-process.on('SIGINT', async () => {
-  logger.info('Cierre del servidor por SIGINT (Ctrl+C)');
-  await prisma.$disconnect();
-  process.exit(0);
-});
-process.on('SIGTERM', async () => {
-  logger.info('Cierre del servidor por SIGTERM');
-  await prisma.$disconnect();
-  process.exit(0);
-});
+  // Manejo de cierre elegante solo cuando el servidor está escuchando
+  process.on('SIGINT', async () => {
+    logger.info('Cierre del servidor por SIGINT (Ctrl+C)');
+    await prisma.$disconnect();
+    process.exit(0);
+  });
+  process.on('SIGTERM', async () => {
+    logger.info('Cierre del servidor por SIGTERM');
+    await prisma.$disconnect();
+    process.exit(0);
+  });
+}
+
+export { app, prisma }; // Exportar app y prisma para pruebas u otros módulos
