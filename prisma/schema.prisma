@@ -75,3 +75,18 @@ model File {
 
   @@map("Archivos")
 }
+
+model Report {
+  id             Int      @id @default(autoincrement())
+  nombre         String
+  reporte_url    String
+  foto_antes_url     String
+  foto_despues_url   String
+  termo_antes_url    String
+  termo_despues_url  String
+  reporte        Json
+  created_at     DateTime @default(now())
+  updated_at     DateTime @updatedAt
+
+  @@map("Reportes")
+}
