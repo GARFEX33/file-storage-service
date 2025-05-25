@@ -8,7 +8,7 @@
       "testStrategy": "Verify that the project initializes correctly and that the Git repository is set up.",
       "priority": "high",
       "dependencies": [],
-      "status": "in-progress",
+      "status": "pending",
       "subtasks": []
     },
     {
