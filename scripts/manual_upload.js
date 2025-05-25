@@ -66,7 +66,6 @@ async function manualUpload() {
   // Añadir el archivo DESPUÉS de los campos de texto
   formData.append('file', new Blob([fileBuffer]), fileName); // Usar Blob para compatibilidad con fetch
 
-
   const serverUrl = 'http://localhost:3000/api/v1/files/upload';
   // Los campos opcionales ya se añadieron antes.
   // Las siguientes líneas son duplicadas y se eliminan:
