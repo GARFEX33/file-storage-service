@@ -58,9 +58,10 @@ model File {
   cliente_id                 Int
   lugar_id                   Int
   tipo_servicio_id           Int
-  periodicidad               String? // Podría ser un Enum si los valores son fijos
-  nombre_equipo              String?
-  identificador_tarea        String?
+  analizado_con_ia           Boolean @default(false)
+  es_reporte                 Boolean @default(false)
+  periodicidad               String
+  nombre_equipo              String
   fecha_realizacion_servicio DateTime?
   hash_contenido             String?   @unique
   metadatos_adicionales      Json?

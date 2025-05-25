@@ -45,7 +45,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 // Configuración de Multer
 const storage = multer.diskStorage({
   destination: async (req, file, cb) => {
-    const { clienteNombre, lugarNombre, tipoServicioNombre, periodicidad, nombreEquipo, identificadorTarea } = req.body;
+    const { clienteNombre, lugarNombre, tipoServicioNombre, periodicidad, nombreEquipo } = req.body;
 
     try {
       const dynamicPath = generateStoragePath(UPLOAD_DIRECTORY, {
@@ -54,7 +54,6 @@ const storage = multer.diskStorage({
         tipoServicioNombre,
         periodicidad,
         nombreEquipo,
-        identificadorTarea
       });
       await fs.mkdir(dynamicPath, { recursive: true });
       cb(null, dynamicPath);
@@ -115,15 +114,13 @@ const upload = multer({ storage: storage, fileFilter: fileFilter, limits: { file
  *       - in: formData
  *         name: periodicidad
  *         type: string
+ *         required: true
  *         description: Periodicidad (para Mantenimientos).
  *       - in: formData
  *         name: nombreEquipo
  *         type: string
+ *         required: true
  *         description: Nombre del equipo (para Mantenimientos o Levantamientos).
- *       - in: formData
- *         name: identificadorTarea
- *         type: string
- *         description: Identificador de la tarea (para Levantamientos u Obras).
  *       - in: formData
  *         name: fechaRealizacionServicio
  *         type: string
@@ -188,7 +185,6 @@ app.post('/api/v1/files/upload',
       tipoServicioNombre,
       periodicidad,
       nombreEquipo,
-      identificadorTarea,
       fechaRealizacionServicio, // Esperado en formato ISO 8601
       subidoPorUsuarioId,
       metadatosAdicionales // Esperado como un string JSON
@@ -231,7 +227,6 @@ app.post('/api/v1/files/upload',
         tipo_servicio_id: tipoServicio.id,
         periodicidad: periodicidad,
         nombre_equipo: nombreEquipo,
-        identificador_tarea: identificadorTarea,
         fecha_realizacion_servicio: fechaRealizacionServicio ? new Date(fechaRealizacionServicio) : null,
         subido_por_usuario_id: subidoPorUsuarioId,
         metadatos_adicionales: metadatosAdicionales ? (() => {
@@ -677,9 +672,11 @@ const swaggerOptions = {
             cliente_id: { type: 'integer', example: 1 },
             lugar_id: { type: 'integer', example: 1 },
             tipo_servicio_id: { type: 'integer', example: 1 },
-            periodicidad: { type: 'string', nullable: true, example: 'Mensual' },
-            nombre_equipo: { type: 'string', nullable: true, example: 'Equipo A' },
-            identificador_tarea: { type: 'string', nullable: true, example: 'Tarea-001' },
+            periodicidad: { type: 'string', example: 'Mensual' }, // Ya no es nullable
+            nombre_equipo: { type: 'string', example: 'Equipo A' }, // Ya no es nullable
+            // identificador_tarea: eliminado
+            analizado_con_ia: { type: 'boolean', default: false, example: false },
+            es_reporte: { type: 'boolean', default: false, example: false },
             fecha_realizacion_servicio: { type: 'string', format: 'date-time', nullable: true, example: '2023-10-26T10:00:00Z' },
             hash_contenido: { type: 'string', nullable: true, example: 'a1b2c3d4...' },
             metadatos_adicionales: { type: 'object', nullable: true, example: { custom_field: 'value' } },
