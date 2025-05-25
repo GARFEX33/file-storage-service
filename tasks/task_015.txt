@@ -1,6 +1,6 @@
 # Task ID: 15
 # Title: Setup OpenAPI Documentation
-# Status: pending
+# Status: done
 # Dependencies: 14
 # Priority: medium
 # Description: Generate OpenAPI documentation for the API endpoints.

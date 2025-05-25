@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000" # Mapea el puerto 3000 del host al puerto 3000 del contenedor
+    depends_on:
+      db:
+        condition: service_healthy # Espera a que la base de datos esté saludable
+    environment:
+      - DATABASE_URL=${DATABASE_URL_DOCKER} # Usar una variable específica para Docker si es necesario, o la misma si es adecuada
+      - PORT=3000
+      - UPLOAD_DIR=/usr/src/app/uploads # Asegurarse que coincida con el Dockerfile
+    volumes:
+      - ./uploads:/usr/src/app/uploads # Monta un volumen para persistir los archivos subidos
+      # Opcional: montar el código fuente para desarrollo en caliente (no recomendado para producción)
+      # - .:/usr/src/app 
+      # - /usr/src/app/node_modules # Evitar que node_modules local sobreescriba el del contenedor
+    networks:
+      - app-network
+
+  db:
+    image: postgres:15-alpine
+    ports:
+      - "5433:5432" # Mapea el puerto 5433 del host al 5432 de PostgreSQL en el contenedor (para evitar conflictos con local)
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data # Persistir datos de PostgreSQL
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-network
+
+volumes:
+  postgres_data: # Define el volumen para la persistencia de datos de PostgreSQL
+
+networks:
+  app-network:
+    driver: bridge

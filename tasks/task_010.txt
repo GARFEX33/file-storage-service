@@ -1,6 +1,6 @@
 # Task ID: 10
 # Title: Implement File Download Logic
-# Status: in-progress
+# Status: done
 # Dependencies: 8
 # Priority: high
 # Description: Develop the logic for downloading files via the API.

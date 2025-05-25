@@ -1,6 +1,6 @@
 # Task ID: 17
 # Title: Setup Testing Framework
-# Status: pending
+# Status: done
 # Dependencies: 16
 # Priority: medium
 # Description: Integrate a testing framework for unit and integration tests.

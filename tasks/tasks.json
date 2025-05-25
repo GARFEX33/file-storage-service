@@ -125,7 +125,7 @@
       "dependencies": [
         8
       ],
-      "status": "in-progress",
+      "status": "done",
       "subtasks": []
     },
     {
@@ -138,7 +138,7 @@
       "dependencies": [
         8
       ],
-      "status": "pending",
+      "status": "done",
       "subtasks": []
     },
     {
@@ -151,7 +151,7 @@
       "dependencies": [
         8
       ],
-      "status": "pending",
+      "status": "done",
       "subtasks": []
     },
     {
@@ -164,7 +164,7 @@
       "dependencies": [
         8
       ],
-      "status": "pending",
+      "status": "done",
       "subtasks": []
     },
     {
@@ -177,7 +177,7 @@
       "dependencies": [
         13
       ],
-      "status": "pending",
+      "status": "done",
       "subtasks": []
     },
     {
@@ -190,7 +190,7 @@
       "dependencies": [
         14
       ],
-      "status": "pending",
+      "status": "done",
       "subtasks": []
     },
     {
@@ -203,7 +203,7 @@
       "dependencies": [
         15
       ],
-      "status": "pending",
+      "status": "done",
       "subtasks": []
     },
     {
@@ -216,7 +216,7 @@
       "dependencies": [
         16
       ],
-      "status": "pending",
+      "status": "done",
       "subtasks": []
     },
     {
@@ -285,7 +285,7 @@
       "dependencies": [
         14
       ],
-      "status": "pending",
+      "status": "in-progress",
       "subtasks": []
     },
     {

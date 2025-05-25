@@ -1,6 +1,6 @@
 # Task ID: 22
 # Title: Implement Logging Mechanism
-# Status: pending
+# Status: in-progress
 # Dependencies: 14
 # Priority: medium
 # Description: Add logging to the application for monitoring and debugging purposes.

@@ -1,6 +1,6 @@
 # Task ID: 12
 # Title: Implement File Deletion Logic
-# Status: pending
+# Status: done
 # Dependencies: 8
 # Priority: high
 # Description: Create functionality to delete files and their metadata from the system.

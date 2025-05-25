@@ -1,6 +1,6 @@
 # Task ID: 11
 # Title: Implement File Listing Logic
-# Status: pending
+# Status: done
 # Dependencies: 8
 # Priority: high
 # Description: Create functionality to list files with filtering options.
